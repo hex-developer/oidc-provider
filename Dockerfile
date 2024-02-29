@@ -1,16 +1,12 @@
-FROM python:3.8
+FROM python:alpine
 
-RUN apt-get update && apt-get install -y \
-		pkg-config \
-		--no-install-recommends
-
-RUN pip install --upgrade pip setuptools pipenv gunicorn
+RUN pip install --upgrade pip setuptools gunicorn
 
 RUN mkdir /app
 WORKDIR /app
 
 COPY ./ ./
-RUN pipenv install -d --skip-lock --system
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
-CMD ["make", "run"]
+CMD ["/app/entrypoint.sh"]

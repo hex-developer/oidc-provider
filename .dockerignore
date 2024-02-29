@@ -1,6 +1,7 @@
 .git
 .github
 static_root
-docker-demo
-screenshot
 db/db.sqlite3
+nginx/default.conf
+docker-compose.yaml
+data

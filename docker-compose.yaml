@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  oidc-server:
+    build: .
+    restart: unless-stopped
+    environment:
+      DJANGO_SUPERUSER_USERNAME: user # Change these
+      DJANGO_SUPERUSER_PASSWORD: password
+      DJANGO_SUPERUSER_EMAIL: user@oidc.localhost # Doesn't need to be real
+    volumes:
+      - ./data/db:/app/db:z
+      - ./data/static_root:/app/static_root:z
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/:ro
+      - ./data/static_root:/static_root:ro
