@@ -28,4 +28,4 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/hex-developer/oidc-server:latest
+          tags: ghcr.io/hex-developer/oidc-provider:latest
