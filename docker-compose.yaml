@@ -8,6 +8,7 @@ services:
       DJANGO_SUPERUSER_USERNAME: user # Change these
       DJANGO_SUPERUSER_PASSWORD: password
       DJANGO_SUPERUSER_EMAIL: user@oidc.localhost # Doesn't need to be real
+      DJANGO_DEBUG: False # Optional
     volumes:
       - ./data/db:/app/db:z
       - ./data/static_root:/app/static_root:z
