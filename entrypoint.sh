@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ -e db.sqlite3 ]
+if [ -e /app/db/db.sqlite3 ]
 then
     echo "Starting..."
 else
