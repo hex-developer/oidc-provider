@@ -8,6 +8,10 @@ else
     python manage.py migrate
     python manage.py creatersakey
 	python manage.py createsuperuser --noinput
+    if [ -z $INITIAL_DATA ]
+    then
+        python manage.py loaddata /app/$INITIAL_DATA
+    fi
     echo "Initialization complete! Starting..."
 fi
 
