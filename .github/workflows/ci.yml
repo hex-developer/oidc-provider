@@ -2,14 +2,21 @@ name: Build docker image
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+      - "*.*.*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Get version
+        id: version
+        run: |
+          version=$(git tag --points-at HEAD)
+          prev_version=$(git describe --abbrev=0 --tags --exclude="$(git describe --abbrev=0 --tags)")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "prev_version=$prev_version" >> "$GITHUB_OUTPUT"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -28,6 +35,6 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/hex-developer/oidc-provider:latest
-          cache-from: type=registry,ref=ghcr.io/hex-developer/oidc-provider:latest
+          tags: ghcr.io/hex-developer/oidc-provider:${{ steps.version.outputs.version }}
+          cache-from: type=registry,ref=ghcr.io/hex-developer/oidc-provider:${{ steps.version.outputs.prev_version }}
           cache-to: type=inline

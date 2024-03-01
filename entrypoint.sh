@@ -8,10 +8,8 @@ else
     python manage.py migrate
     python manage.py creatersakey
 	python manage.py createsuperuser --noinput
-    if [ -z "$INITIAL_DATA" ]
+    if [ -n "$INITIAL_DATA" ]
     then
-        echo "No initial data provided. Continuing"
-    else
         python manage.py loaddata /app/$INITIAL_DATA
     fi
     echo "Initialization complete! Starting..."
