@@ -17,4 +17,4 @@ fi
 
 python manage.py collectstatic --noinput
 python manage.py migrate
-gunicorn oidc_server.wsgi:application -w 2 -b :8000
+exec gunicorn oidc_server.wsgi:application -w 2 -b :8000
