@@ -9,8 +9,8 @@ class HostMiddleware:
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        query_dict = (self.request.POST if self.request.method == 'POST'
-                      else self.request.GET)
+        query_dict = (request.POST if request.method == 'POST'
+                      else request.GET)
         
         host = query_dict.get('host', '')
         redirect_uri = query_dict.get('redirect_uri', '')
