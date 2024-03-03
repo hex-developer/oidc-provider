@@ -26,7 +26,7 @@ class HostMiddleware:
                     print(f"Checking URI {uri}")
                     if host in uri:
                         print(f"Host {host} is in {uri}")
-                        redirect_to = re.sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+request.get_full_path().replace("redirect_uri="+redirect_uri, "redirect_uri="+uri)
+                        redirect_to = re.sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+re.sub(r"^(.+)(redirect_uri=[^&]+)(.+)?$", r"\1"+uri+r"\3", request.get_full_path())
                         print(f"Redirecting to {redirect_to}")
                         return redirect(redirect_to)
             except Client.DoesNotExist:
