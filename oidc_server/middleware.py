@@ -18,7 +18,7 @@ class HostMiddleware:
         if (host and redirect_uri) and host != redirect_uri:
             try:
                 client = Client.objects.get(client_id=client_id)
-                for uri in client._redirect_uris:
+                for uri in client._redirect_uris.split("\n"):
                     if host in uri:
                         return redirect(sub(r"^http(s?):\/\/([^\/]+)(.+)", r"http\1://"+host, uri)+request.get_full_path())
             except Client.DoesNotExist:
