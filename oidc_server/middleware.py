@@ -1,7 +1,7 @@
 from oidc_provider.models import Client
 from oidc_provider.lib.errors import ClientIdError
 from django.shortcuts import redirect
-from re import sub
+import re
 
 class HostMiddleware:
     def __init__(self, get_response):
@@ -15,12 +15,20 @@ class HostMiddleware:
         host = query_dict.get('host', '')
         redirect_uri = query_dict.get('redirect_uri', '')
         client_id = query_dict.get('client_id', '')
-        if (host and redirect_uri) and host != redirect_uri:
+        print("Got request")
+        redirect_uri_host = re.match(r"^http(s?):\/\/([^\/]+)", redirect_uri).group(2)
+        if (host and redirect_uri) and host != redirect_uri_host:
+            print(f"Host and redirect URI don't match {host} {redirect_uri_host}")
             try:
                 client = Client.objects.get(client_id=client_id)
+                print(f"Client found {client_id}")
                 for uri in client._redirect_uris.split("\n"):
+                    print(f"Checking URI {uri}")
                     if host in uri:
-                        return redirect(sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+request.get_full_path().replace("redirect_uri="+redirect_uri, "redirect_uri="+uri))
+                        print(f"Host {host} is in {uri}")
+                        redirect_to = re.sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+request.get_full_path().replace("redirect_uri="+redirect_uri, "redirect_uri="+uri)
+                        print(f"Redirecting to {redirect_to}")
+                        return redirect(redirect_to)
             except Client.DoesNotExist:
                 raise ClientIdError()
         response = self.get_response(request)
