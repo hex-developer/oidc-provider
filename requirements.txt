@@ -1,2 +1,2 @@
 Django==5.0.2
-django-oidc-provider @ git+https://github.com/hex-developer/django-oidc-provider@master
+django-oidc-provider @ git+https://github.com/hex-developer/django-oidc-provider@c99b2ef
