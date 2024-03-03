@@ -20,7 +20,7 @@ class HostMiddleware:
                 client = Client.objects.get(client_id=client_id)
                 for uri in client._redirect_uris.split("\n"):
                     if host in uri:
-                        return redirect(sub(r"^http(s?):\/\/([^\/]+)(.+)", r"http\1://"+host, uri)+request.get_full_path().replace("redirect_uri="+redirect_uri, "redirect_uri="+uri))
+                        return redirect(sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+request.get_full_path().replace("redirect_uri="+redirect_uri, "redirect_uri="+uri))
             except Client.DoesNotExist:
                 raise ClientIdError()
         response = self.get_response(request)
