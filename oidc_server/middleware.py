@@ -16,7 +16,10 @@ class HostMiddleware:
         redirect_uri = query_dict.get('redirect_uri', '')
         client_id = query_dict.get('client_id', '')
         print("Got request")
-        redirect_uri_host = re.match(r"^http(s?):\/\/([^\/]+)", redirect_uri).group(2)
+        try:
+            redirect_uri_host = re.match(r"^http(s?):\/\/([^\/]+)", redirect_uri).group(2)
+        except:
+            redirect_uri_host = None
         if (host and redirect_uri) and host != redirect_uri_host:
             print(f"Host and redirect URI don't match {host} {redirect_uri_host}")
             try:
@@ -26,7 +29,7 @@ class HostMiddleware:
                     print(f"Checking URI {uri}")
                     if host in uri:
                         print(f"Host {host} is in {uri}")
-                        redirect_to = re.sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+re.sub(r"^(.+)(redirect_uri=[^&]+)(.+)?$", r"\1"+uri+r"\3", request.get_full_path())
+                        redirect_to = re.sub(r"^http(s?):\/\/([^\/]+)(.+)", request.scheme+r"://\2", uri)+re.sub(r"^(.+)(redirect_uri=[^&]+)(.+)?$", r"\1redirect_uri="+uri+r"\3", request.get_full_path())
                         print(f"Redirecting to {redirect_to}")
                         return redirect(redirect_to)
             except Client.DoesNotExist:
